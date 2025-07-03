@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # PostgreSQL connection string
 # Replace this with your actual connection string from Railway
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:YOUR_PASSWORD@YOUR_HOST:PORT/YOUR_DATABASE'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:HxUppyuPWngdmEvaryagXFjDqNFhuuYh@switchback.proxy.rlwy.net:51020/railway'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
