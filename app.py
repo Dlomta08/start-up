@@ -48,7 +48,7 @@ def register():
         if User.query.filter((User.username == username) | (User.email == email)).first():
             return "Username or email already exists.", 400
 
-        hashed_pw = generate_password_hash(password)
+        hashed_pw = generate_password_hash(password, method='sha256')
         new_user = User(username=username, email=email, password_hash=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
