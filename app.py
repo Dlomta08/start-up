@@ -5,9 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 
 # PostgreSQL connection string
-# Replace this with your actual connection string from Railway
+# Make sure you replace this with your actual connection string
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:HxUppyuPWngdmEvaryagXFjDqNFhuuYh@switchback.proxy.rlwy.net:51020/railway'
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -17,24 +16,20 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.Text, nullable=False)  # Allow long hashes
+    password_hash = db.Column(db.String(128), nullable=False)  # Keep VARCHAR(128)
     role = db.Column(db.String(20), default='member')
 
-# Automatically create tables if they don't exist
 with app.app_context():
     db.create_all()
 
-# Home route serving index.html
 @app.route("/")
 def serve_index():
     return send_from_directory("static", "index.html")
 
-# Serve all static files (CSS, JS, images)
 @app.route("/<path:filename>")
 def serve_static_files(filename):
     return send_from_directory("static", filename)
 
-# Register route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -48,8 +43,14 @@ def register():
         if User.query.filter((User.username == username) | (User.email == email)).first():
             return "Username or email already exists.", 400
 
+        # Use shorter sha256 hashes
         hashed_pw = generate_password_hash(password, method='sha256')
-        new_user = User(username=username, email=email, password_hash=hashed_pw)
+
+        new_user = User(
+            username=username,
+            email=email,
+            password_hash=hashed_pw
+        )
         db.session.add(new_user)
         db.session.commit()
 
@@ -57,7 +58,6 @@ def register():
 
     return send_from_directory("static", "register.html")
 
-# Login route
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form.get('username')
@@ -75,7 +75,6 @@ def login():
 
     return f"Welcome, {user.username}! You are logged in as {user.role}."
 
-# List all users as JSON
 @app.route('/users')
 def list_users():
     users = User.query.all()
