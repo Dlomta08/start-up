@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, redirect, send_from_directory, url_for
+from flask import Flask, render_template, request, jsonify, redirect, send_from_directory, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -16,7 +16,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)  # Keep VARCHAR(128)
+    password_hash = db.Column(db.Text, nullable=False)
     role = db.Column(db.String(20), default='member')
 
 with app.app_context():
@@ -44,7 +44,7 @@ def register():
             return "Username or email already exists.", 400
 
         # Use shorter sha256 hashes
-        hashed_pw = generate_password_hash(password, method='sha256')
+        hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
 
         new_user = User(
             username=username,
@@ -56,7 +56,7 @@ def register():
 
         return redirect(url_for('serve_index'))
 
-    return send_from_directory("static", "register.html")
+    return render_template("register.html")
 
 @app.route('/login', methods=['POST'])
 def login():
