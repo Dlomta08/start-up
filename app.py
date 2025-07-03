@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash # type
 app = Flask(__name__)
 
 # Configure SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@containers-us-west-123.railway.app:5432/railway'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:HxUppyuPWngdmEvaryagXFjDqNFhuuYh@switchback.proxy.rlwy.net:51020/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
