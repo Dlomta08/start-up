@@ -1,50 +1,19 @@
-let timerInterval;
-let timeLeft = 3 * 60 * 60; // 3 Hours 
-
-function startQuiz(withTimer) {
-  document.getElementById("mode-selection").style.display = "none";
-  const quizForm = document.getElementById("quizForm");
-  quizForm.style.display = "block";
-
-  if (withTimer) {
-    document.getElementById("timer").style.display = "block";
-    updateTimerDisplay();
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      updateTimerDisplay();
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        alert("დრო ამოიწურა! ქვიზი დასრულებულია.");
-        quizForm.requestSubmit(); // safely submits even if clicked from code
-      }
-    }, 1000);
-  }
-}
-
-function updateTimerDisplay() {
-    const hours = String(Math.floor(timeLeft / 3600)).padStart(2, "0");
-    const minutes = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, "0");
-    const seconds = String(timeLeft % 60).padStart(2, "0");
-    document.getElementById("time").textContent = `${hours}:${minutes}:${seconds}`;
-}
-
-
 const quizData = [
     {
-        question: "რა მაქსიმალური ფართობი შეიძლება ჰქონდეს მართკუთხედს, რომლის სამი გვერდის ჯამია 30მ?",
+        question: "რა მაქსიმალური ფართობი შეიძლება ჰქონდეს მართკუთხედს, რომლის სამი გვერდის ჯამია $30$მ?",
         options: [
-            "100მ²",
-            "125მ²",
-            "200მ²",
-            "175მ²",
-            "112,5მ²",
-            "225მ²"
+            "$100$მ²",
+            "$125$მ²",
+            "$200$მ²",
+            "$175$მ²",
+            "$112{,}5$მ²",
+            "$225$მ²"
         ],
         correct: 4,
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "გამოთვალეთ განსაზღვრული ინტეგრალის მნიშვნელობა $\\int_{0}^{0.5e} \\frac{1}{e-x} dx$",
+        question: "გამოთვალეთ განსაზღვრული ინტეგრალის მნიშვნელობა $\\int_{0}^{0{,}5e} \\frac{1}{e-x} dx$",
         options: [
             "$1$",
             "$2$",
@@ -71,7 +40,7 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "დაწერეთ იმ სიბრტყის განტოლება, რომელიც გადის სივრცის (1;2;2) წერტილზე და რომლის მართობული ვექტორია $\\vec{m}(2; -3; -1)$.",
+        question: "დაწერეთ იმ სიბრტყის განტოლება, რომელიც გადის სივრცის $(1;2;2)$ წერტილზე და რომლის მართობული ვექტორია $\\vec{m}(2; -3; -1)$.",
         options: [
             "$2x + 6 + 3y + 4z = 0$",
             "$x - 6 + 2y + 2z = 0$",
@@ -84,14 +53,14 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "ელიფსის წვეროს კოორდინატებია (-3;0), (3;0), (0;-2), (0;2). ეს ელიფსი გადაიტანეს პარალელურად $\\vec{a}(-2; 3)$ ვექტორის გასწვრივ. დაწერეთ როგორია მიღებული ელიფსის გატოლება?",
+        question: "ელიფსის წვეროს კოორდინატებია $(-3;0)$, $(3;0),$ $(0;-2),$ $(0;2).$ ეს ელიფსი გადაიტანეს პარალელურად $\\vec{a}(-2; 3)$ ვექტორის გასწვრივ. დაწერეთ როგორია მიღებული ელიფსის გატოლება?",
         options: [
             "$4(x+2)^2 + 9(y-3)^2 = 36$",
             "$9(x+2)^2 + 4(y-3)^2 = 36$",
             "$4(x+2)^2 + 9(y-3)^2 = 1$",
-            "დ) $9(x+2)^2 + 4(y-3)^2 = 1$",
-            "ე) $4(x-2)^2 + 9(y+3)^2 = 36$",
-            "ვ) $9(x-2)^2 + 4(y+3)^2 = 36$"
+            "$9(x+2)^2 + 4(y-3)^2 = 1$",
+            "$4(x-2)^2 + 9(y+3)^2 = 36$",
+            "$9(x-2)^2 + 4(y+3)^2 = 36$"
         ],
         correct: 0,
         tags: ["Inequalities", "Exponential"]
@@ -136,7 +105,7 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "ჰიპერბოლის ერთერთი ასიმპტოტია $y = 0.75x$ წრფე, ხოლო ამ ჰიპერბოლის ერთერთი ფოკუსია $F(-5; 0)$ წერტილი. იპოვეთ, რისი ტოლია ჰიპერბოლის წვეროებს შორის მანძილი?",
+        question: "ჰიპერბოლის ერთერთი ასიმპტოტია $y = 0{,}75x$ წრფე, ხოლო ამ ჰიპერბოლის ერთერთი ფოკუსია $F(-5; 0)$ წერტილი. იპოვეთ, რისი ტოლია ჰიპერბოლის წვეროებს შორის მანძილი?",
         options: [
             "$2$",
             "$4$",
@@ -149,7 +118,7 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "პარაბოლის ფოკუსია F(-2;1) წერტილი. ხოლო ამ პარაბოლის დირექტრისაა x=4 წრფე. დაწერეთ როგორია ამ პარაბოლის განტოლება?",
+        question: "პარაბოლის ფოკუსია $F(-2;1)$ წერტილი. ხოლო ამ პარაბოლის დირექტრისაა $x=4$ წრფე. დაწერეთ როგორია ამ პარაბოლის განტოლება?",
         options: [
             "$y^2 + 2y + 12x + 13 = 0$",
             "$y^2 + 12y + 2x + 13 = 0$",
@@ -175,7 +144,7 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "დაწერეთ იმ წრეწირის განტოლება, რომელიც ჩახაზულია სამკუთხედში, რომლის წვეროები საკოორდინატო სიბრტყის O(0;0), A(6;0), B(0;8) წერტილებია.",
+        question: "დაწერეთ იმ წრეწირის განტოლება, რომელიც ჩახაზულია სამკუთხედში, რომლის წვეროები საკოორდინატო სიბრტყის $O(0;0),$ $A(6;0),$ $B(0;8)$ წერტილებია.",
         options: [
             "$x^2 + y^2 = 4(x + y - 1)$",
             "$x^2 + y^2 = 4x + 4y + 4$",
@@ -190,31 +159,31 @@ const quizData = [
     {
         question: "დათვალეთ $\\int_{0}^{\\pi} x \\cdot \\sin x dx$ განსაზღვრული ინტეგრალის მნიშვნელობა?",
         options: [
-            "$0.5\\pi$",
+            "$0{,}5\\pi$",
             "$2\\pi$",
             "$3\\pi$",
             "$\\pi$",
-            "$1.5\\pi$",
-            "$2.5\\pi$"
+            "$1{,}5\\pi$",
+            "$2{,}5\\pi$"
         ],
         correct: 3,
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "$(4m; 1; 3m-1) m \\in \\mathbb{R}$ წარმოადგენს სივრცეში წრფის განტოლებას. იპოვეთ, რისი ტოლია იმ კუთხის კოსინუსი, რომელსაც ადგენს მოცემული წრფე OX საკოორდინატო ღერძთან?",
+        question: "$(4m; 1; 3m-1) m \\in \\mathbb{R}$ წარმოადგენს სივრცეში წრფის განტოლებას. იპოვეთ, რისი ტოლია იმ კუთხის კოსინუსი, რომელსაც ადგენს მოცემული წრფე $OX$ საკოორდინატო ღერძთან?",
         options: [
-            "$0.6$",
-            "$0.8$",
-            "$0.25$",
-            "$0.75$",
-            "$0.5$",
+            "$0{,}6$",
+            "$0{,}8$",
+            "$0{,}25$",
+            "$0{,}75$",
+            "$0{,}5$",
             "$1$"
         ],
         correct: 1,
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "სივრცეში მოცემულია სამი წერტილი A(1;2;0), B(0;1;2), C(1;0;1). დაწერეთ იმ სიბრტყის განტოლება, რომელიც ამ სამ წერტილზე გამავალი სიბრტყის პარალელურია და გადის კოორდინატთა სათავეზე.",
+        question: "სივრცეში მოცემულია სამი წერტილი $A(1;2;0),$ $B(0;1;2),$ $C(1;0;1).$ დაწერეთ იმ სიბრტყის განტოლება, რომელიც ამ სამ წერტილზე გამავალი სიბრტყის პარალელურია და გადის კოორდინატთა სათავეზე.",
         options: [
             "$2x - y - z = 0$",
             "$x + y + z = 0$",
@@ -240,14 +209,14 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "ტრაპეცია ჩახაზულია წრეწირში ისე, რომ ტრაპეციის ერთი ფუძე დიამეტრია. იპოვეთ ყველა ასეთი ტრაპეციებიდან უდიდესი ფართოვის მქონე ტრაპეციის პართობი, თუ წრეწრისი რადიუსია $R = \\frac{\\sqrt{3}}{4}$ მ.",
+        question: "ტრაპეცია ჩახაზულია წრეწირში ისე, რომ ტრაპეციის ერთი ფუძე დიამეტრია. იპოვეთ ყველა ასეთი ტრაპეციებიდან უდიდესი ფართობის მქონე ტრაპეციის პართობი, თუ წრეწრისი რადიუსია $R = \\frac{\\sqrt{3}}{4}$ მ.",
         options: [
-            "1მ²",
-            "1,25მ²",
-            "1,5მ²",
-            "1,75მ²",
-            "2მ²",
-            "2,25მ²"
+            "$1$მ²",
+            "$1{,}25$მ²",
+            "$1{,}5$მ²",
+            "$1{,}75$მ²",
+            "$2$მ²",
+            "$2{,}25$მ²"
         ],
         correct: 5,
         tags: ["Inequalities", "Exponential"]
@@ -279,7 +248,7 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "სივრცეში მოცემულია ორი სიბრტყე $x - y + 5z = 0$ და $2x + 3y + 7z = 10$. იპოვეთ მანძილი ამ ორი სიბრტყის და XOY საკოორდინატო სიბრტყის გადაკვეთის წერტილიდან (სამივე სიბრტყის საერთო წერტილი) კოორდინათთა სათავემდე?",
+        question: "სივრცეში მოცემულია ორი სიბრტყე $x - y + 5z = 0$ და $2x + 3y + 7z = 10$. იპოვეთ მანძილი ამ ორი სიბრტყის და $XOY$ საკოორდინატო სიბრტყის გადაკვეთის წერტილიდან (სამივე სიბრტყის საერთო წერტილი) კოორდინათთა სათავემდე?",
         options: [
             "$\\sqrt{2}$",
             "$\\sqrt{3}$",
@@ -305,7 +274,7 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "იპოვეთ რისი ტოლია $f(x) = \\frac{1}{x-1} + \\frac{1}{2-x}$ ფუნქციის მინიმალური მნიშვნელობა (1;2) შუალედში?",
+        question: "იპოვეთ რისი ტოლია $f(x) = \\frac{1}{x-1} + \\frac{1}{2-x}$ ფუნქციის მინიმალური მნიშვნელობა $(1;2)$ შუალედში?",
         options: [
             "$1$",
             "$2$",
@@ -331,14 +300,14 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     },
     {
-        question: "რა მაქსიმალური ფართობი შეიძლება ჰქონდეს მართკუთხა სამკუთხედს, რომლის ჰიპოტენუზისა და მასზე დაშვებული სიმაღლის ჯამია 30მ?",
+        question: "რა მაქსიმალური ფართობი შეიძლება ჰქონდეს მართკუთხა სამკუთხედს, რომლის ჰიპოტენუზისა და მასზე დაშვებული სიმაღლის ჯამია $30$მ?",
         options: [
-            "100მ²",
-            "125მ²",
-            "12,5მ²",
-            "112,5მ²",
-            "200მ²",
-            "225მ²"
+            "$100$მ²",
+            "$125$მ²",
+            "$12{,}5$მ²",
+            "$112{,}5$მ²",
+            "$200$მ²",
+            "$225$მ²"
         ],
         correct: 0,
         tags: ["Inequalities", "Exponential"]
@@ -357,74 +326,3 @@ const quizData = [
         tags: ["Inequalities", "Exponential"]
     }
 ];
-  
-  const form = document.getElementById("quizForm");
-  
-  quizData.forEach((q, i) => {
-    const fieldset = document.createElement("fieldset");
-    const legend = document.createElement("legend");
-    legend.innerHTML = `<strong>${i + 1}.</strong><br>${q.question}`;
-    fieldset.appendChild(legend);
-  
-    q.options.forEach((opt, j) => {
-      const label = document.createElement("label");
-      const radio = document.createElement("input");
-      radio.type = "radio";
-      radio.name = `question${i}`;
-      radio.value = j;
-      label.appendChild(radio);
-      label.append(` ${opt}`);
-      fieldset.appendChild(label);
-    });
-  
-    form.insertBefore(fieldset, form.querySelector("button"));
-  });
-  
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    
-    if (timerInterval) {
-      clearInterval(timerInterval);
-    }
-
-    let score = 0;
-    const result = document.getElementById("result");
-    result.innerHTML = "";
-  
-    const tagStats = {};
-  
-    quizData.forEach((q, i) => {
-      const answer = form.querySelector(`input[name="question${i}"]:checked`);
-      const fieldset = form.querySelectorAll("fieldset")[i];
-      const explanation = document.createElement("div");
-  
-      const isCorrect = answer && parseInt(answer.value) === q.correct;
-      if (isCorrect) score++;
-  
-      explanation.innerHTML = isCorrect
-        ? `<span style="color: green;">Correct ✔️</span>`
-        : `<span style="color: red;">Wrong ❌</span> – Correct answer: <strong>${q.options[q.correct]}</strong>`;
-  
-      q.tags.forEach(tag => {
-        if (!tagStats[tag]) tagStats[tag] = { correct: 0, total: 0 };
-        tagStats[tag].total++;
-        if (isCorrect) tagStats[tag].correct++;
-      });
-  
-      explanation.style.marginTop = "8px";
-      fieldset.appendChild(explanation);
-    });
-  
-    result.innerHTML = `<strong>Total Score: ${score} / ${quizData.length}</strong><br><h3>Score by Topic:</h3>`;
-    for (let tag in tagStats) {
-      const { correct, total } = tagStats[tag];
-      const percentage = ((correct / total) * 100).toFixed(1);
-      result.innerHTML += `<p>${tag}: ${correct} / ${total} (${percentage}%)</p>`;
-    }
-  
-    form.querySelector("button").disabled = true;
-  
-    // Re-render math after result is shown
-    if (window.MathJax) MathJax.typeset();
-  });
-  

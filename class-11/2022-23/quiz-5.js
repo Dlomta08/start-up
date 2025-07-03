@@ -1,34 +1,3 @@
-let timerInterval;
-let timeLeft = 3 * 60 * 60; // 3 Hours 
-
-function startQuiz(withTimer) {
-  document.getElementById("mode-selection").style.display = "none";
-  const quizForm = document.getElementById("quizForm");
-  quizForm.style.display = "block";
-
-  if (withTimer) {
-    document.getElementById("timer").style.display = "block";
-    updateTimerDisplay();
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      updateTimerDisplay();
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        alert("დრო ამოიწურა! ქვიზი დასრულებულია.");
-        quizForm.requestSubmit(); // safely submits even if clicked from code
-      }
-    }, 1000);
-  }
-}
-
-function updateTimerDisplay() {
-    const hours = String(Math.floor(timeLeft / 3600)).padStart(2, "0");
-    const minutes = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, "0");
-    const seconds = String(timeLeft % 60).padStart(2, "0");
-    document.getElementById("time").textContent = `${hours}:${minutes}:${seconds}`;
-}
-
-
 const quizData = [
     {
       question: "გამოთვალეთ \\( \\int_{\\frac{\\pi}{12}}^{\\frac{\\pi}{4}} \\cos2x \\, dx \\) ინტეგრალი.",
@@ -134,7 +103,7 @@ const quizData = [
         \\ln x, & \\text{როცა } 1 \\le x
       \\end{cases}
     \\) ფუნქციას?`,
-      options: ["არცერთი", "$1$", "$2$", "$3$","$4$","4-ზე $\\,$ მეტი"],
+      options: ["არცერთი", "$1$", "$2$", "$3$","$4$","$4$-ზე $\\,$ მეტი"],
       correct: 1,
       tags: ["Math"]
     },
@@ -157,8 +126,8 @@ const quizData = [
       tags: ["Math"]
     },
     {
-      question: "სხეულის გავლილი მანძლის \\((S,მ)\\) დროზე \\((t,წმ)\\) დამოკიდებულება \\(S(t)={t}^{3}-11t \\) ტოლობით განსაზღვრება. იპოვეთ წერტილის აჩქარება დროის იმ მომენტში, როცა მისი სიჩქარე \\(16მ/წმ\\) ის ტოლია.", 
-      options: ["$4მ/წმ^2$", "$6მ/წმ^2$", "$8მ/წმ^2$", "$10მ/წმ^2$","$18მ/წმ^2$","$24მ/წმ^2$"],
+      question: "სხეულის გავლილი მანძლის ($S$,მ) დროზე ($t$,წმ) დამოკიდებულება \\(S(t)={t}^{3}-11t \\) ტოლობით განსაზღვრება. იპოვეთ წერტილის აჩქარება დროის იმ მომენტში, როცა მისი სიჩქარე $16$მ/წმ ის ტოლია.", 
+      options: ["$4$მ/წმ$^2$", "$6$მ/წმ$^2$", "$$8$მ/წმ$^2$", "$10$მ/წმ$^2$","$18$მ/წმ$^2$","$24$მ/წმ$^2$"],
       correct: 4,
       tags: ["Math"]
     },
@@ -175,14 +144,14 @@ const quizData = [
       tags: ["Math"]
     },
     {
-      question: "კონუსის ღერძული კვეთა წესიერი სამკუთხედია, რომლის გვერდია 4. სფერო ეხება კონუსის გვერდით ზედაპირს K წერტილში და ფუძის შემცველ სიბრტყეს ეხება D წერტილში. იპოვეთ სფეროს რადიუსი, თუ მანძილი D წერტილიდან კონუსის ღერძამდე 3-ია.", 
+      question: "კონუსის ღერძული კვეთა წესიერი სამკუთხედია, რომლის გვერდია $4$. სფერო ეხება კონუსის გვერდით ზედაპირს $K$ წერტილში და ფუძის შემცველ სიბრტყეს ეხება $D$ წერტილში. იპოვეთ სფეროს რადიუსი, თუ მანძილი $D$ წერტილიდან კონუსის ღერძამდე $3$-ია.", 
       options: ["$\\sqrt{3}$", "$\\sqrt{5}$", "$2\\sqrt{2}$", "$1$","$2$","$3$"],
       correct: 0,
       tags: ["Math"]
     },
     {
       question: "ცილინდრის ერთ ფუძეზე აღებულია \\(A\\)  და  \\(B\\) წერტილები. მეორე ფუძეზე კი \\(B_1\\) და \\(C_1\\) წერტილები. \\(BB_1\\) ცილინდრის მსახველია, ხოლო \\(AC_1\\) კვეთს ცილინდრის ღერძს. იპოვეთ მანძილი \\(AC_1\\) და \\(BB_1\\) წრფეებს შორის, თუ \\(AB=12\\) და \\(B_1C_1=9\\).", 
-      options: ["$4$", "$4,5$", "$7,2$", "$8,4$","$9$","$9,5$"],
+      options: ["$4$", "$4{,}5$", "$7{,}2$", "$8{,}4$","$9$","$9{,}5$"],
       correct: 2,
       tags: ["Math"]
     },
@@ -190,74 +159,3 @@ const quizData = [
   
   
   ];
-  
-  const form = document.getElementById("quizForm");
-  
-  quizData.forEach((q, i) => {
-    const fieldset = document.createElement("fieldset");
-    const legend = document.createElement("legend");
-    legend.innerHTML = `<strong>${i + 1}.</strong><br>${q.question}`;
-    fieldset.appendChild(legend);
-  
-    q.options.forEach((opt, j) => {
-      const label = document.createElement("label");
-      const radio = document.createElement("input");
-      radio.type = "radio";
-      radio.name = `question${i}`;
-      radio.value = j;
-      label.appendChild(radio);
-      label.append(` ${opt}`);
-      fieldset.appendChild(label);
-    });
-  
-    form.insertBefore(fieldset, form.querySelector("button"));
-  });
-  
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    
-    if (timerInterval) {
-      clearInterval(timerInterval);
-    }
-
-    let score = 0;
-    const result = document.getElementById("result");
-    result.innerHTML = "";
-  
-    const tagStats = {};
-  
-    quizData.forEach((q, i) => {
-      const answer = form.querySelector(`input[name="question${i}"]:checked`);
-      const fieldset = form.querySelectorAll("fieldset")[i];
-      const explanation = document.createElement("div");
-  
-      const isCorrect = answer && parseInt(answer.value) === q.correct;
-      if (isCorrect) score++;
-  
-      explanation.innerHTML = isCorrect
-        ? `<span style="color: green;">Correct ✔️</span>`
-        : `<span style="color: red;">Wrong ❌</span> – Correct answer: <strong>${q.options[q.correct]}</strong>`;
-  
-      q.tags.forEach(tag => {
-        if (!tagStats[tag]) tagStats[tag] = { correct: 0, total: 0 };
-        tagStats[tag].total++;
-        if (isCorrect) tagStats[tag].correct++;
-      });
-  
-      explanation.style.marginTop = "8px";
-      fieldset.appendChild(explanation);
-    });
-  
-    result.innerHTML = `<strong>Total Score: ${score} / ${quizData.length}</strong><br><h3>Score by Topic:</h3>`;
-    for (let tag in tagStats) {
-      const { correct, total } = tagStats[tag];
-      const percentage = ((correct / total) * 100).toFixed(1);
-      result.innerHTML += `<p>${tag}: ${correct} / ${total} (${percentage}%)</p>`;
-    }
-  
-    form.querySelector("button").disabled = true;
-  
-    // Re-render math after result is shown
-    if (window.MathJax) MathJax.typeset();
-  });
-  

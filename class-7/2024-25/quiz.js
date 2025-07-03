@@ -1,6 +1,56 @@
-let timerInterval;
-let timeLeft = 3 * 60 * 60; // 5 minutes
+let currentMode = 'normal';
 
+function setMode(mode) {
+  currentMode = mode;
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  questions.forEach((question, index) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+
+    // Render question text
+    const questionText = document.createElement('div');
+    questionText.innerHTML = `\\(${question.q}\\)`;
+    card.appendChild(questionText);
+
+    // Render options
+    const optionsDiv = document.createElement('div');
+    optionsDiv.className = 'options';
+
+    question.options.forEach((option, i) => {
+      const label = document.createElement('label');
+      label.className = 'option';
+
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = `question-${index}`;
+      radio.value = i;
+
+      label.appendChild(radio);
+      label.innerHTML += ` ${option}`;
+      optionsDiv.appendChild(label);
+    });
+
+    card.appendChild(optionsDiv);
+
+    // Check answer button only in normal mode
+    if (currentMode === 'normal') {
+      const checkBtn = document.createElement('button');
+      checkBtn.textContent = 'შეამოწმე პასუხი';
+      checkBtn.onclick = () => checkAnswer(index);
+      card.appendChild(checkBtn);
+    }
+
+    container.appendChild(card);
+  });
+
+  MathJax.typeset();let timerInterval;
+let timeLeft = 3 * 60 * 60; // 3 Hours 
 
 function startQuiz(withTimer) {
   document.getElementById("mode-selection").style.display = "none";
@@ -15,7 +65,7 @@ function startQuiz(withTimer) {
       updateTimerDisplay();
       if (timeLeft <= 0) {
         clearInterval(timerInterval);
-        alert("დრო ამოიწურა! ქვიზი ავტომატურად დასრულდა.");
+        alert("დრო ამოიწურა! ქვიზი დასრულებულია.");
         quizForm.requestSubmit(); // safely submits even if clicked from code
       }
     }, 1000);
@@ -29,167 +79,191 @@ function updateTimerDisplay() {
     document.getElementById("time").textContent = `${hours}:${minutes}:${seconds}`;
 }
 
+
 const quizData = [
-    {
-      question: "გამოთვალეთ \\( \\int_{\\frac{\\pi}{12}}^{\\frac{\\pi}{4}} \\cos2x \\, dx \\) ინტეგრალი.",
-      options: ["$\\pi$", "$-1$", "$0$", "$1$", "$\\frac{1}{4}$", "$\\frac{1}{2}$"],
-      correct: 4,
-      tags: ["Math"]  
-    },
-    {
-      question: "გამოთვალეთ \\( f'\\left(\\frac{7\\pi}{6}\\right) \\), თუ \\( f(x) = \\sin\\left(\\frac{3\\pi}{7}\\right) + \\cos\\left(\\frac{3x}{7}\\right) \\).",
-      options: ["$0$", "$-\\frac{3}{7}$", "$1$", "$\\frac{2}{3}$", "$-\\frac{1}{2}$", "$-1$"],
-      correct: 1,
-      tags: ["Calculus"]
-    },
-    {
-      question: "ამოხსენით \\( x - \\sqrt{3-2x} < 0\\) უტოლობა.",
-      options: ["$(2;5)$", "$(\\frac{3}{2};2)$", "$(-1;4)$", "$(\\frac{3}{2};\\infty)$", "$(-2;3)$" , "$(-\\infty;1)$"],
-      correct: 5,
-      tags: ["Math"]
-    },
-    {
-      question: "იპოვეთ \\(\\frac{x^2}{48} + \\frac{y^2}{12} = 1 \\) ელიფსის დირექტისებს შორის მანძილი.",
-      options: ["$12$", "$24$", "$48$", "$16$","$32$","$36$"],
-      correct: 3,
-      tags: ["Math"]
-    },
-    {
-      question: "ჩამოთვლილთაგან რომელია იმ პარაბოლის განტოლება, რომლის წვერო კოორდინატთა სათავეშია, ხოლო ფოკუსი მდებარეობს \\(F(3;0)\\) წერტილში.",
-      options: ["${y}^{2}=16x+3$", "${y}^{2}=2x$", "${y}^{2}=12x$", "${y}^{2}=6x$","${y}^{2}=x$","${y}^{2}=9x$"],
-      correct: 2,
-      tags: ["Math"]
-    },
-    {
-      question: "იპოვეთ  \\(x\\cdot {2}^{\\log_x 5}=10 \\) განტოლების ამონახსნთა ჯამი.", 
-      options: ["$7$", "$\\frac{7}{2}$", "$\\frac{9}{2}$", "$1$", "$14$", "$11$"],
-      correct: 0,
-      tags: ["Math"]
-    },
-    {
-      question: "იპოვეთ  \\(\\sqrt{2x+18} = \\sqrt{f'(1)}\\) განტოლების ამონახსნი, თუ \\(f(x)={({x}^{2}-3x)}^{4}\\) .", 
-      options: ["$2$", "$7$", "$5$", "$8$","$-4$","$-2$"],
-      correct: 1,
-      tags: ["Math"]
-    },
-    {
-      question: "გამოთვალეთ  \\(\\lim\\limits_{x \\to \\infty} {(\\frac{x+5}{x-7})}^{x}\\) ზღვარი.", 
-      options: ["$1$", "$\\infty$", "${e}^{12}$", "${e}^{6}$","${e}$","$0$"],
-      correct: 2,
-      tags: ["Math"]
-    },
-    {
-      question: "იპოვეთ \\(11x-8y-7z+5=0 \\) და \\(7x+2y-8z-3=0 \\) სიბრტყეებს შორის კუთხის კოსინუსი.", 
-      options: ["$\\frac{1}{2}$", "$\\frac{2}{3}$", "$\\frac{1}{7}$", "$\\frac{1}{\\sqrt2}$","$\\frac{1}{\\sqrt3}$","$\\frac{2}{\\sqrt5}$"],
-      correct: 3,
-      tags: ["Math"]
-    },
-    {
-      question: "სამკუთხედის გვერდებია \\(3;4 \\) და \\(5\\). იპოვეთ ზედაპირის ფართობის სხეულისა, რომელიც მიღებულია ამ სამკუთხედის ბრუნვით დიდი გვერდის გარშემო.", 
-      options: ["$\\frac{73\\pi}{3}$", "$\\frac{84\\pi}{5}$", "$\\frac{68\\pi}{3}$", "$\\frac{55\\pi}{4}$","$\\frac{96\\pi}{7}$","$\\frac{106\\pi}{9}$"],
-      correct: 1,
-      tags: ["Math"]
-    },
-    {
-      question: "იპოვეთ \\(\\ln(2\\cdot{4}^{x}-8\\cdot{2}^{x}) \\le \\ln({2}^{x}-4) \\).", 
-      options: ["$\\emptyset $", "$(2;4)$", "$(1;6)$", "$(-1;2)$","$(1;4]$","$(2;4]$"],
-      correct: 0,
-      tags: ["Math"]
-    },
-    {
-      question: "ჩამოთვლილთაგან \\(f(x)=\\frac{{x}^{4}-{x}^{2}}{4}-\\frac{{x}^{3}}{3} \\) ფუნქციის გრაფიკზე მდებარე რომელ წერტილში გაივლის მხები, რომელიც \\(y=-\\frac{1}{3}x+8 \\) წრფის მართობულია?", 
-      options: ["$(1;\\frac{1}{3})$", "$(2;5)$", "$(2;\\frac{1}{3})$", "$(3;9)$","$(4;0)$","$(5;1)$"],
-      correct: 2,
-      tags: ["Math"]
-    },
-    {
-      question: "იპოვეთ  \\(y=-2{x}^{2}+10x-4\\) და \\(y={x}^{2}-2x+5 \\) წირებით შემოსაზღვრული ფიგურის ფართობი.", 
-      options: ["$4$", "$5$", "$6$", "$8$","$10$","$15$"],
-      correct: 0,
-      tags: ["Math"]
-    },
-    {
-      question: "ჩამოთვლილთაგან რომელია ჰიპერბოლის განტოლება, რომლის წარმოსახვითი ღერძია 6, ხოლო ფოკუსებს შორის მანძილი 14.", 
-      options: ["$\\frac{{x}^{2}}{{8}^{2}}-\\frac{{y}^{2}}{{6}^{2}}=1$", "$\\frac{{x}^{2}}{40}-\\frac{{y}^{2}}{9}=1$", "$\\frac{{x}^{2}}{36}-\\frac{{y}^{2}}{4}=1$", "$\\frac{{x}^{2}}{49}-\\frac{{y}^{2}}{36}=1$","$\\frac{{x}^{2}}{{7}^{2}}-\\frac{{y}^{2}}{{6}^{2}}=1$","$\\frac{{x}^{2}}{{7}^{2}}-\\frac{{y}^{2}}{{3}^{2}}=1$"],
-      correct: 1,
-      tags: ["Math"]
-    },
-    {
-      question: "\\(XOY \\) საკორდინანტო სიბრტყეზე იპოვეთ იმ ოთხკუთხედის ფართობი, რომლის წვეროები  \\(A(1;3),B(4;7),C(-1;-2),D(2;2)\\) წერტილებია.", 
-      options: ["$3$", "$5$", "$6$", "$7$","$9$","$10$"],
-      correct: 3,
-      tags: ["Math"]
-    },
-    {
-      question: "იპოვეთ  \\(\\sin(x)\\cdot\\sqrt{2+3x-2{x}^{2}}=0 \\) განტოლების ამონახსთა ჯამი.", 
-      options: ["$0$", "$\\frac{3}{2}$", "$\\frac{\\pi+5}{3}$", "$\\pi+2$","$\\frac{5\\pi+1}{3}$","$2$"],
-      correct: 1,
-      tags: ["Math"]
-    },
-    {
-      question: `რამდენი წყვეტის წერტილი აქვს \\( f(x) = 
-      \\begin{cases}
-        2, & \\text{როცა } x < -1 \\\\
-        2 - 2x, & \\text{როცა } -1 \\le x < 1 \\\\
-        \\ln x, & \\text{როცა } 1 \\le x
-      \\end{cases}
-    \\) ფუნქციას?`,
-      options: ["არცერთი", "$1$", "$2$", "$3$","$4$","4-ზე $\\,$ მეტი"],
-      correct: 1,
-      tags: ["Math"]
-    },
-    {
-      question: "გამოთვალეთ  \\(\\int_{1}^{2} \\frac{x dx}{{x}^{2}+2} \\) ინტეგრალი.", 
-      options: ["$4$", "$\\frac{3}{2}$", "$\\sin\\frac{1}{3}$", "$\\frac{\\ln 2}{2}$","$9-\\pi$","$\\sqrt{7}$"],
-      correct: 3,
-      tags: ["Math"]
-    },
-    {
-      question: "\\(Ax+By+Cz+D=0\\) სიბრტყე გადის \\(OX\\) ღერძზე და \\(K(1;2;3)\\) წერტილზე. იპოვეთ \\(\\frac{A+D+B}{C}\\) .", 
-      options: ["$-\\frac{3}{2}$", "$-\\frac{3}{2}$", "$\\frac{1}{2}$", "$\\frac{5}{2}$","$\\frac{7}{2}$","$\\frac{5}{3}$"],
-      correct: 0,
-      tags: ["Math"]
-    },
-    {
-      question: "გამოთვალეთ იმ სხეულის მოცულობა, რომელიც მიიღება \\(xy=4, x=1, x=4, y=0 \\) წირებით შემოსაზღვრული ფიგურის ბრუნვით \\(Ox\\) ღერძის გარშემო.", 
-      options: ["$8\\pi$", "$12\\pi$", "$14\\pi$", "$18\\pi$","$24\\pi$","$32\\pi$"],
-      correct: 1,
-      tags: ["Math"]
-    },
-    {
-      question: "სხეულის გავლილი მანძლის \\((S,მ)\\) დროზე \\((t,წმ)\\) დამოკიდებულება \\(S(t)={t}^{3}-11t \\) ტოლობით განსაზღვრება. იპოვეთ წერტილის აჩქარება დროის იმ მომენტში, როცა მისი სიჩქარე \\(16მ/წმ\\) ის ტოლია.", 
-      options: ["$4მ/წმ^2$", "$6მ/წმ^2$", "$8მ/წმ^2$", "$10მ/წმ^2$","$18მ/წმ^2$","$24მ/წმ^2$"],
-      correct: 4,
-      tags: ["Math"]
-    },
-    {
-      question: "ჩამოთვლილთაგან რომელია \\(f(x) = \\frac{{x}^{3}-1}{4{x}^{2}} \\) ფუნქციის გრაფიკის გადაღუნვის წერტილი?", 
-      options: ["$x=-3$", "$x=-1$", "$x=2$", "$x=3$","$x=4$","არცერთი ჩამოთვლილთაგან"],
-      correct: 5,
-      tags: ["Math"]
-    },
-    {
-      question: "ჩამოთვლილთაგან რომელია  \\(f(x)=\\frac{x}{2}-\\arccos\\frac{2x}{1+{x}^{2} } \\) ფუნქციის გრაფიკის გადაღუნვის წერტილი?", 
-      options: ["$y=\\frac{x}{2}+2$", "$y=2x+\\frac{\\pi}{2}$", "$y=x+\\pi$", "$y=\\frac{x-\\pi}{2}$","$y=\\frac{x}{4}+\\pi$","$y=\\frac{x}{2}+2\\pi$"],
-      correct: 3,
-      tags: ["Math"]
-    },
-    {
-      question: "კონუსის ღერძული კვეთა წესიერი სამკუთხედია, რომლის გვერდია 4. სფერო ეხება კონუსის გვერდით ზედაპირს K წერტილში და ფუძის შემცველ სიბრტყეს ეხება D წერტილში. იპოვეთ სფეროს რადიუსი, თუ მანძილი D წერტილიდან კონუსის ღერძამდე 3-ია.", 
-      options: ["$\\sqrt{3}$", "$\\sqrt{5}$", "$2\\sqrt{2}$", "$1$","$2$","$3$"],
-      correct: 0,
-      tags: ["Math"]
-    },
-    {
-      question: "ცილინდრის ერთ ფუძეზე აღებულია \\(A\\)  და  \\(B\\) წერტილები. მეორე ფუძეზე კი \\(B_1\\) და \\(C_1\\) წერტილები. \\(BB_1\\) ცილინდრის მსახველია, ხოლო \\(AC_1\\) კვეთს ცილინდრის ღერძს. იპოვეთ მანძილი \\(AC_1\\) და \\(BB_1\\) წრფეებს შორის, თუ \\(AB=12\\) და \\(B_1C_1=9\\).", 
-      options: ["$4$", "$4,5$", "$7,2$", "$8,4$","$9$","$9,5$"],
-      correct: 2,
-      tags: ["Math"]
-    },
-    
-  
-  
-  ];
+  {
+    "question": "მოცემულია $(-1; 1)$ ინტერვალში განსაზღვრული $F(x) = x^2$, $G(x) = x^3$, $T(x) = 3^x$, $L(x) = \\sin x$, $K(x) = \\cos x$ ფუნქციები. ჩამოთვლილთაგან რამდენ ფუნქციას გააჩნია შექცეული ფუნქცია?",
+    "options": ["არცერთს", "$1$", "$2$", "$3$", "$4$", "$5$"],
+    "correct": 3, // Please add the correct option index here (0 for 'a', 1 for 'b', etc.)
+    "tags": [] // Please add relevant tags here
+  },
+  {
+    "question": "რამდენი დადებითი ამონახსნი აქვს $3^x = \\sin \\frac{1}{3} x$ განტოლებას?",
+    "options": ["არცერთი", "ერთი", "ორი", "სამი", "ოთხი", "ოთხზე მეტი"],
+    "correct": 0,
+    "tags": []
+  },
+  {
+    "question": "იპოვეთ $\\log_8(x^2 - 6x + 10) + 2$ გამოსახულების უმცირესი მნიშვნელობა.",
+    "options": ["$-1$", "$0$", "$1$", "$2$", "$\\log_8 3$", "$\\log_8 10$"],
+    "correct": 3,
+    "tags": []
+  },
+  {
+    "question": "მოცემულია $ABCDA_1B_1C_1D_1$ კუბი. იპოვეთ კუთხე $BCA_1$ და $B_1C_1D$ სიბრტყეებს შორის.",
+    "options": ["30°", "45°", "60°", "90°", "120°", "150°"],
+    "correct": 3,
+    "tags": []
+  },
+  {
+    "question": "წესიერი ექვსკუთხა პირამიდის სიმაღლეა $\\sqrt{32}$, ხოლო ფუძის გვერდი 8. იპოვეთ მცირედიაგონალური კვეთის ფართობი.",
+    "options": ["$4\\sqrt{6}$", "$3\\sqrt{6}$", "$24$", "$32$", "$48$", "$64$"],
+    "correct": 4,
+    "tags": []
+  },
+  {
+    "question": "ამოხსენით განტოლება $3^{\\cos x} \\cdot 5^{\\sin x} = 15^{\\cos x}$ (პასუხებში ყველგან $n \\in \\mathbb{Z}$.) ",
+    "options": ["$x = \\frac{\\pi}{2} + \\pi n$", "$x = \\pi + \\pi n$", "$x = \\frac{\\pi}{4} + \\pi n$", "$x = \\frac{\\pi}{4} + 2\\pi n; x = \\frac{\\pi}{2} + 2\\pi n$", "$x = \\pi n$", "$x = \\frac{\\pi}{4} + 4\\pi n$"],
+    "correct": 2,
+    "tags": []
+  },
+  {
+    "question": "რომელ მეოთხედში მდებარეობს $f(x) = 5^{-|x|} - 5$ ფუნქციის გრაფიკი?",
+    "options": ["I", "I-II", "I-II-III", "III-IV", "II-IV", "I-II-III-IV"],
+    "correct": 3,
+    "tags": []
+  },
+  {
+    "question": "შემდეგი რიცხვები $a = 25^{\\frac{1}{\\log_6 5}}$ ; $b = 2^{\\log_{\\sqrt{2}}{2\\sqrt{5}}}$ ; $c = 3^{\\log_9{121}}$ ; $d = (\\frac{1}{2})^{\\log_{\\frac{1}{3}}{81}}$ დაალაგეთ ზრდის მიხედვით.",
+    "options": ["a;c;b;d", "c;d;b;a", "c;d;a;b", "d;c;a;b", "b;d;c;a", "c;b;d;a"],
+    "correct": 1,
+    "tags": []
+  },
+  {
+    "question": "წესიერი სამკუთხა პირამიდის სიმაღლე $2\\sqrt{3}$-ია, ხოლო გვერდითი წახნაგი ფუძის სიბრტყესთან $60°$-იან კუთხეს ქმნის. იპოვეთ პირამიდის მოცულობა.",
+    "options": ["$12\\sqrt{3}$", "16", "$8\\sqrt{3}$", "$18$", "$24$", "$32$"],
+    "correct": 4,
+    "tags": []
+  },
+  {
+    "question": "წესირი სამკუთხა პირამიდის წვეროსთან მდებარე ბრტყელი კუთხეა $90°$. იპოვეთ ამ პირამიდის გვერდითი ზედაპირის ფართობის შეფარდება ფუძის ფართობთან.",
+    "options": ["$\\sqrt{2}$", "2", "$\\sqrt{3}$", "1", "3", "$\\sqrt{5}$"],
+    "correct": 4,
+    "tags": []
+  },
+  {
+    "question": "იპოვეთ $2^{x^2 - 4x + 5} = 1 + \\sin^2 \\frac{\\pi x}{4}$ განტოლების ამონახსნთა რაოდენობა?",
+    "options": ["$0$", "$1$", "$2$", "$3$", "$4$", "$5$"],
+    "correct": 2,
+    "tags": []
+  },
+  {
+    "question": "იპოვეთ $\\frac{f(x+2)}{f(x-7)}$ გამოსახულების მნიშვნელობა , თუ $f(x) = 8^{x+1}$.",
+    "options": ["$8^{12}$", "$8^{17}$", "$8^5$", "$2^{22}$", "$2^{27}$", "$2^{30}$"],
+    "correct": 4,
+    "tags": []
+  },
+  {
+    "question": "გამოთვალეთ $6 \\cdot \\log_3 2 \\cdot \\log_4 3 \\cdot \\log_5 4 \\cdot \\log_6 5 \\cdot \\log_7 6 \\cdot \\log_8 7$.",
+    "options": ["$1$", "$2$", "$3$", "$4$", "$5$", "$6$"],
+    "correct": 1,
+    "tags": []
+  },
+  {
+    "question": "იპოვეთ წესიერი სამკუთხა პირამიდის გვერდითი ზედაპირის ფართობი, თუ მისი სიმაღლე უდრის 4სმ-ს და აპოთემა 8სმ-ია.",
+    "options": ["144 სმ$^2$", "124 სმ$^2$", "96 სმ$^2$", "248 სმ$^2$", "288 სმ$^2$", "324 სმ$^2$"],
+    "correct": 4,
+    "tags": []
+  },
+  {
+    "question": "პირამიდის ფუძეა რომბი, რომლის გვერდია 6 და მახვილი კუთხე $30°$ ფუძესთან მდებარე ყველა ორწახნაგა კუთხე ტოლია. პირამიდის გვერდითი ზედაპირის ფართობია 36. იპოვეთ ფუძესთან მდებარე ორწახნაგა კუთხის სიდიდე.",
+    "options": ["$10°$", "$20°$", "$30°$", "$40°$", "$45°$", "$60°$"],
+    "correct": 5,
+    "tags": []
+  },
+  {
+    "question": "იპოვეთ $199^{|x+6|} - 199^{|x^2+4x-12|} = \\log_{199} (\\cot 225°)$ განტოლების ფესვთა ჯამი.",
+    "options": ["$-2$", "$-1$", "$0$", "$1$", "$3$", "$19$"],
+    "correct": 0,
+    "tags": []
+  },
+  {
+    "question": "გამოთვალეთ $\\log_{10} 45$, თუ $\\log_5 3 = a$ და $\\log_5 2 = b$.",
+    "options": ["$\\frac{a+1}{b-1}$", "$\\frac{2a+1}{b+1}$", "$\\frac{5a-b}{a-1}$", "$\\frac{a+b}{2b+1}$", "$\\frac{3a}{5b}$", "$\\frac{3a+1}{5b}$"],
+    "correct": 1,
+    "tags": []
+  },
+  {
+    "question": "ამოხსენით $\\log_2^2(3x - 1) + \\log_{(3x-1)}^2 2 - \\log_2(3x - 1)^2 - \\log_{(3x-1)} 4 + 2 = 0$ განტოლება.",
+    "options": ["$1$", "$1$; $\\log_2 3$", "$1$; $\\log_3 2$", "$1$; $\\log_2 3$ ; $\\log_3 4$", "$1$; $2 + \\log_2 3$", "1; $\\log_3 2 + 1$"],
+    "correct": 0,
+    "tags": []
+  },
+  {
+    "question": "პირამიდის ფუძეა $ABC$ ტოლგვერდა სამკუთხედი, რომლის გვერდია 2. $ACD$ წახნაგი ფუძის მართობულია, ამასთან $AD = CD = \\sqrt{6}$. იპოვეთ $BD$ წიბოს სიგრძე.",
+    "options": ["$\\sqrt{6}$", "$\\sqrt{8}$", "$\\sqrt{10}$", "$3$", "$4$", "$3\\sqrt{2}$"],
+    "correct": 1,
+    "tags": []
+  },
+  {
+    "question": "წესიერი ოთხკუთხა პრიზმის გვერდითი წახნაგები კვადრატებია. მისი გვერდითი ზედაპირის ფართობი არის 144. იპოვეთ იმ მრავალწახნაგას მოცულობა რომლის წვეროები პრიზმის ყველა წახნაგში ჩახაზული წრეწირების ცენტრებშია .",
+    "options": ["$12$", "$16$", "$16\\sqrt{2}$", "$18\\sqrt{2}$", "$24$", "$36$"],
+    "correct": 5,
+    "tags": []
+  },
+  {
+    "question": "ჩამოთვლილთაგან რომელია $\\log_3(x^{x^4}) = \\log_{\\frac{1}{3}} 0.25$ განტოლების ამონახსნი?",
+    "options": ["$2$", "$\\sqrt{2}$", "$2\\sqrt{2}$", "$\\sqrt[4]{3}$", "$4$", "$6$"],
+    "correct": 1,
+    "tags": []
+  },
+  {
+  "question": "ჩამოთვლილთაგან რისი ტოლი შეიძლება იყოს $x + y$, თუ $\\left\\{\\begin{array}{c}3^x \\cdot 2^y=576 \\\\ \\log _{\\sqrt{2}}(y-x)=4\\end{array}\\right.$",
+  "options": [
+      "$8$",
+      "$6$",
+      "$0$",
+      "$4$",
+      "$1$",
+      "$10$"
+  ],
+  "correct": 0,
+    "tags": []
+  },  
+  {
+    id: 23,
+    question: "ჩამოთვლილთაგან რომელი აკმაყოფილებს $2^{\\log_x 2} = x^{\\frac{1}{\\log_4 x}}$ განტოლებას",
+    options: [
+      "$\\sqrt{2}$",
+      "$4^{\\sqrt{2}}$",
+      "$\\log_2 3$",
+      "$\\frac{1}{\\sqrt{2}}$",
+      "$2^{\\sqrt{2}-1}$",
+      "$\\frac{2}{\\sqrt{2} + 1}$"
+    ],
+    correct: 4,
+    tag: []
+  },
+  {
+    id: 24,
+    question: "სამკუთხა პირამიდის გვერდითი წიბოები უდრის $a$-ს. ამ წიბოებით შექმნილი წვეროსთან მდებარე ბრტყელი კუთხეებია $45^{\\circ}, 45^{\\circ}$ და $60^{\\circ}$. იპოვეთ პირამიდის მოცულობა.",
+    options: [
+      "$2a^3$",
+      "$a^3$",
+      "$\\frac{1}{2}a^3$",
+      "$\\frac{3}{2}a^3$",
+      "$\\frac{1}{12}a^3$"
+    ],
+    correct: 5,
+    tag: []
+  },
+  {
+    id: 25,
+    question: "$ABCDA_1B_1C_1D_1$ მართი პარალელეპიპედის მოცულობაა 6 სმ$^3$ . ($ABCD$ და $A_1B_1C_1D_1$ ფუძეებია $AA_1;BB_1$; $CC_1;DD_1$ გვედითი წიბოებია). იპოვეთ $AD_1CB_1$ პირამიდის მოცულობა .",
+    options: [
+      "$2სმ^3$",
+      "$3სმ^3$",
+      "$4სმ^3$",
+      "$\\frac{10}{3}სმ^3$",
+      "$\\frac{11}{3}სმ^3$",
+      "$\\frac{13}{3}სმ^3$"
+    ],
+    correct: 0,
+    tag: []
+  }
+];
+
+
   
   const form = document.getElementById("quizForm");
   
@@ -216,11 +290,10 @@ const quizData = [
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     
-    // Clear the timer interval if the form is submitted
     if (timerInterval) {
       clearInterval(timerInterval);
     }
-  
+
     let score = 0;
     const result = document.getElementById("result");
     result.innerHTML = "";
@@ -262,3 +335,25 @@ const quizData = [
     if (window.MathJax) MathJax.typeset();
   });
   
+}
+
+function checkAnswer(questionIndex) {
+  const options = document.getElementsByName(`question-${questionIndex}`);
+  const correct = questions[questionIndex].correct;
+
+  options.forEach((option, i) => {
+    const label = option.parentElement;
+    label.classList.remove('correct', 'incorrect');
+
+    if (option.checked) {
+      if (parseInt(option.value) === correct) {
+        label.classList.add('correct');
+      } else {
+        label.classList.add('incorrect');
+      }
+    }
+  });
+}
+
+// Initial render
+window.onload = () => setMode('normal');

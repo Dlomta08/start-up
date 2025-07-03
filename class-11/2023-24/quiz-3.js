@@ -1,34 +1,3 @@
-let timerInterval;
-let timeLeft = 3 * 60 * 60; // 3 Hours 
-
-function startQuiz(withTimer) {
-  document.getElementById("mode-selection").style.display = "none";
-  const quizForm = document.getElementById("quizForm");
-  quizForm.style.display = "block";
-
-  if (withTimer) {
-    document.getElementById("timer").style.display = "block";
-    updateTimerDisplay();
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      updateTimerDisplay();
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        alert("დრო ამოიწურა! ქვიზი დასრულებულია.");
-        quizForm.requestSubmit(); // safely submits even if clicked from code
-      }
-    }, 1000);
-  }
-}
-
-function updateTimerDisplay() {
-    const hours = String(Math.floor(timeLeft / 3600)).padStart(2, "0");
-    const minutes = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, "0");
-    const seconds = String(timeLeft % 60).padStart(2, "0");
-    document.getElementById("time").textContent = `${hours}:${minutes}:${seconds}`;
-}
-
-
 const quizData = [
     {
         question: "მოცემული გვაქვს მიმდევრობა $X_n= \\begin{cases} 1 + \\frac{1}{n} & n=2k+1 \\\\ -2 + \\frac{1}{n} & n=2k \\end{cases}$. ჩამოთვლილთაგან რომელია სამართლიანი?",
@@ -85,12 +54,12 @@ const quizData = [
     {
         question: "საკოორდინატო სიბრტყეზე დახაზულია $y=-3x$ წრფის გრაფიკი. ამავე სიბრტყეზე მონიშნულია ორი განსხვავებული $A(-1;a)$ და $B(-1;b)$ წერტილი. რისი ტოლია ამ წერტილებს შორის მანძილი თუ თითოეული მათგანი წრფის გრაფიკიდან $\\sqrt{10}$-ის ტოლი მანძილითაა დაშორებული?",
         options: [
-            "8",
-            "22",
-            "18",
-            "16",
-            "20",
-            "14"
+            "$8$",
+            "$22$",
+            "$18$",
+            "$16$",
+            "$20$",
+            "$14$"
         ],
         correct: 4,
         tags: ["Geometry", "Surface Area"]
@@ -111,12 +80,12 @@ const quizData = [
     {
         question: "გამოთვალეთ, რისი ტოლია $\\lim\\limits_{n\\to\\infty} \\frac{3n^3+8n^2-6}{-n^3+2n^2+n}$ ზღვრის მნიშვნელობა?",
         options: [
-            "-1",
-            "-2",
-            "-3",
-            "1",
-            "2",
-            "3"
+            "$-1$",
+            "$-2$",
+            "$-3$",
+            "$1$",
+            "$2$",
+            "$3$"
         ],
         correct: 2,
         tags: ["Geometry", "Surface Area"]
@@ -124,25 +93,25 @@ const quizData = [
     {
         question: "იპოვეთ $f(x)=(x^2+1)^{2x}$. რისი ტოლია $f'(0)$ გამოსახულების მნიშვნელობა?",
         options: [
-            "0",
-            "-1",
-            "1",
-            "-2",
-            "2",
-            "3"
+            "$0$",
+            "$-1$",
+            "$1$",
+            "$-2$",
+            "$2$",
+            "$3$"
         ],
         correct: 0,
         tags: ["Geometry", "Surface Area"]
     },
     {
-        question: "მოცემულია $f(x)=\\begin{cases} a & x\\in[-0.5;0.5] \\\\ \\frac{1}{x^2} & x\\notin[-0.5;0.5] \\end{cases}$ რისი ტოლი უნდა იყოს $a$, რომ ფუნქცია იყოს უწყვეტი?",
+        question: "მოცემულია $f(x)=\\begin{cases} a & x\\in[-0{,}5;0{,}5] \\\\ \\frac{1}{x^2} & x\\notin[-0{,}5;0{,}5] \\end{cases}$ რისი ტოლი უნდა იყოს $a$, რომ ფუნქცია იყოს უწყვეტი?",
         options: [
-            "0.5",
-            "0.25",
-            "1",
-            "-2",
-            "2",
-            "4"
+            "$0{,}5$",
+            "$0{,}25$",
+            "$1$",
+            "$-2$",
+            "$2$",
+            "$4$"
         ],
         correct: 5,
         tags: ["Geometry", "Surface Area"]
@@ -163,12 +132,12 @@ const quizData = [
     {
         question: "გამოთვალეთ რისი ტოლია $\\lim\\limits_{x\\to+\\infty}\\frac{\\ln(\\frac{1}{x})}{e^x\\cdot \\frac{1}{x}}$ ზღვრის მნიშვნელობა?",
         options: [
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"
+            "$0$",
+            "$1$",
+            "$2$",
+            "$3$",
+            "$4$",
+            "$5$"
         ],
         correct: 0,
         tags: ["Geometry", "Surface Area"]
@@ -177,10 +146,10 @@ const quizData = [
         question: "რამდენი ამონახსნი აქვს $f'(x)=0$ განტოლებას, სადაც $f(x)=\\arctan(x)+\\arccos(x)$",
         options: [
             "არცერთი",
-            "1",
-            "2",
-            "3",
-            "4",
+            "$1$",
+            "$2$",
+            "$3$",
+            "$4$",
             "უამრავი"
         ],
         correct: 1,
@@ -189,25 +158,25 @@ const quizData = [
     {
         question: "მოცემულია, რომ $f'(x)=2x+2$ და $g'(x)=3-x$. რისი ტოლია $\\lim\\limits_{a\\to0}\\frac{f(x+a)+2g(x+a)-f(x)-2g(x)}{a}$?",
         options: [
-            "10",
-            "8",
-            "6",
-            "4",
-            "2",
-            "0"
+            "$10$",
+            "$8$",
+            "$6$",
+            "$4$",
+            "$2$",
+            "$0$"
         ],
         correct: 1,
         tags: ["Geometry", "Surface Area"]
     },
     {
-        question: "რისი ტოლია იმ წაკვეთილი კონუსის გვერდითი ზედაპირის ფართობი, რომლის ფუძის რადიუსებია 1 და 4 ხოლო სიმაღლე კი 4-ია?",
+        question: "რისი ტოლია იმ წაკვეთილი კონუსის გვერდითი ზედაპირის ფართობი, რომლის ფუძის რადიუსებია $1$ და $4$ ხოლო სიმაღლე კი $4$-ია?",
         options: [
             "$25\\pi$",
             "$20\\pi$",
             "$30\\pi$",
             "$15\\pi$",
             "$50\\pi$",
-            "$22.5\\pi$"
+            "$22{,}5\\pi$"
         ],
         correct: 0,
         tags: ["Geometry", "Surface Area"]
@@ -215,12 +184,12 @@ const quizData = [
     {
         question: "დათვალეთ რისი ტოლია $\\lim\\limits_{x\\to0}\\frac{(\\sin x)^2}{e^x-x-1}$ ზღვრის მნიშვნელობა?",
         options: [
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"
+            "$0$",
+            "$1$",
+            "$2$",
+            "$3$",
+            "$4$",
+            "$5$"
         ],
         correct: 2,
         tags: ["Geometry", "Surface Area"]
@@ -228,12 +197,12 @@ const quizData = [
     {
         question: "რისი ტოლია იმ სამკუთხედის ფართობი, რომელიც შემოსაზღვრულია $y=x+2$; $y=-2x+5$ და $y=-0.5x+2$ წრფეებით?",
         options: [
-            "0.5",
-            "1",
-            "1.5",
-            "2",
-            "2.5",
-            "3"
+            "$0{,}5$",
+            "$1$",
+            "$1{,}5$",
+            "$2$",
+            "$2{,}5$",
+            "$3$"
         ],
         correct: 2,
         tags: ["Geometry", "Surface Area"]
@@ -254,11 +223,11 @@ const quizData = [
     {
         question: "მოცემულია $f(x)=(\\sin\\sqrt{1-x^2})^2$ ფუნქცია. რამდენი ამონახსნი აქვს $f'(x)=0$ განტოლებას?",
         options: [
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
+            "$0$",
+            "$1$",
+            "$2$",
+            "$3$",
+            "$4$",
             "არცერთი წინა პასუხი არაა სწორი"
         ],
         correct: 1,
@@ -278,7 +247,7 @@ const quizData = [
         tags: ["Geometry", "Surface Area"]
     },
     {
-        question: "კონუსის სიმაღლეა 9, ხოლო მისი ფუძის რადიუსია 12. ამ კონუსში ჩახაზულია ბირთვი (ბირთვი ეხება კონუსის ფუძეს ცენტრში და ეხება კონუსის გვერდით ზედაპირს). იპოვეთ რისი ტოლია ბირთვის მოცულობისა და კონუსის მოცულობების შეფარდება.",
+        question: "კონუსის სიმაღლეა $9$, ხოლო მისი ფუძის რადიუსია $12$. ამ კონუსში ჩახაზულია ბირთვი (ბირთვი ეხება კონუსის ფუძეს ცენტრში და ეხება კონუსის გვერდით ზედაპირს). იპოვეთ რისი ტოლია ბირთვის მოცულობისა და კონუსის მოცულობების შეფარდება.",
         options: [
             "$16:81$",
             "$9:25$",
@@ -293,12 +262,12 @@ const quizData = [
     {
         question: "იპოვეთ რისი ტოლია $(0; -16)$ წერტილზე გამავალი $y=x^3$ ფუნქციის მხების შეხების წერტილის კოორდინატების ჯამი?",
         options: [
-            "4",
-            "8",
-            "6",
-            "10",
-            "12",
-            "16"
+            "$4$",
+            "$8$",
+            "$6$",
+            "$10$",
+            "$12$",
+            "$16$"
         ],
         correct: 3,
         tags: ["Geometry", "Surface Area"]
@@ -317,14 +286,14 @@ const quizData = [
         tags: ["Geometry", "Surface Area"]
     },
     {
-        question: "$A(3;a)$ წერტილზე გავლებულია ორი ურთიერთმართობული წრფე $y=k_1x+b_1$ და $y=k_2x+b_2$ რომლებიც OY ღერძს კვეთენ ისეთ წერტილებში, რომელთა შორის მანძილია 9. რისი ტოლია $|k_1 + k_2|$?",
+        question: "$A(3;a)$ წერტილზე გავლებულია ორი ურთიერთმართობული წრფე $y=k_1x+b_1$ და $y=k_2x+b_2$ რომლებიც $OY$ ღერძს კვეთენ ისეთ წერტილებში, რომელთა შორის მანძილია $9$. რისი ტოლია $|k_1 + k_2|$?",
         options: [
-            "1",
+            "$1$",
             "$\\sqrt{5}$",
-            "2",
-            "2.5",
-            "3",
-            "1.5"
+            "$2$",
+            "$2{,}5$",
+            "$3$",
+            "$1{,}5$"
         ],
         correct: 1,
         tags: ["Geometry", "Surface Area"]
@@ -356,74 +325,3 @@ const quizData = [
         tags: ["Geometry", "Surface Area"]
     }
 ];
-  
-  const form = document.getElementById("quizForm");
-  
-  quizData.forEach((q, i) => {
-    const fieldset = document.createElement("fieldset");
-    const legend = document.createElement("legend");
-    legend.innerHTML = `<strong>${i + 1}.</strong><br>${q.question}`;
-    fieldset.appendChild(legend);
-  
-    q.options.forEach((opt, j) => {
-      const label = document.createElement("label");
-      const radio = document.createElement("input");
-      radio.type = "radio";
-      radio.name = `question${i}`;
-      radio.value = j;
-      label.appendChild(radio);
-      label.append(` ${opt}`);
-      fieldset.appendChild(label);
-    });
-  
-    form.insertBefore(fieldset, form.querySelector("button"));
-  });
-  
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    
-    if (timerInterval) {
-      clearInterval(timerInterval);
-    }
-
-    let score = 0;
-    const result = document.getElementById("result");
-    result.innerHTML = "";
-  
-    const tagStats = {};
-  
-    quizData.forEach((q, i) => {
-      const answer = form.querySelector(`input[name="question${i}"]:checked`);
-      const fieldset = form.querySelectorAll("fieldset")[i];
-      const explanation = document.createElement("div");
-  
-      const isCorrect = answer && parseInt(answer.value) === q.correct;
-      if (isCorrect) score++;
-  
-      explanation.innerHTML = isCorrect
-        ? `<span style="color: green;">Correct ✔️</span>`
-        : `<span style="color: red;">Wrong ❌</span> – Correct answer: <strong>${q.options[q.correct]}</strong>`;
-  
-      q.tags.forEach(tag => {
-        if (!tagStats[tag]) tagStats[tag] = { correct: 0, total: 0 };
-        tagStats[tag].total++;
-        if (isCorrect) tagStats[tag].correct++;
-      });
-  
-      explanation.style.marginTop = "8px";
-      fieldset.appendChild(explanation);
-    });
-  
-    result.innerHTML = `<strong>Total Score: ${score} / ${quizData.length}</strong><br><h3>Score by Topic:</h3>`;
-    for (let tag in tagStats) {
-      const { correct, total } = tagStats[tag];
-      const percentage = ((correct / total) * 100).toFixed(1);
-      result.innerHTML += `<p>${tag}: ${correct} / ${total} (${percentage}%)</p>`;
-    }
-  
-    form.querySelector("button").disabled = true;
-  
-    // Re-render math after result is shown
-    if (window.MathJax) MathJax.typeset();
-  });
-  
