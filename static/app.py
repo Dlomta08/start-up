@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify, redirect, send_from_directory, url_for
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, request, jsonify, redirect, send_from_directory, url_for # type: ignore
+from flask_sqlalchemy import SQLAlchemy # type: ignore
+from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
 app = Flask(__name__)
 
@@ -22,15 +22,15 @@ class User(db.Model):
 with app.app_context():
     db.create_all()
 
-# Home route serving index.html
+# Home route - serve index.html from static/
 @app.route("/")
 def serve_index():
-    return send_from_directory(".", "index.html")
+    return send_from_directory("static", "index.html")
 
-# Serve all other static files from project root
-#@app.route("/<path:filename>")
-#def static_files(filename):
- #   return send_from_directory(".", filename)
+# Serve all static files (CSS, JS, images) from static/
+@app.route("/<path:filename>")
+def serve_static_files(filename):
+    return send_from_directory("static", filename)
 
 # Register route
 @app.route('/register', methods=['GET', 'POST'])
@@ -53,7 +53,8 @@ def register():
 
         return redirect(url_for('serve_index'))
 
-    return send_from_directory(".", "register.html")
+    # You can create register.html in static if you want a form page
+    return send_from_directory("static", "register.html")
 
 # Login route
 @app.route('/login', methods=['POST'])
