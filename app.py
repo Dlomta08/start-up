@@ -1,10 +1,13 @@
-from flask import Flask, render_template, request, jsonify, redirect, send_from_directory, url_for
+from flask import Flask, render_template, request, jsonify, redirect, send_from_directory, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
+
+
 # PostgreSQL connection string
+
 # Make sure you replace this with your actual connection string
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:HxUppyuPWngdmEvaryagXFjDqNFhuuYh@switchback.proxy.rlwy.net:51020/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -73,7 +76,11 @@ def login():
     if not check_password_hash(user.password_hash, password):
         return "Incorrect password.", 400
 
-    return f"Welcome, {user.username}! You are logged in as {user.role}."
+    # ✅ This is where you set the session:
+    session['username'] = user.username
+
+    return redirect(url_for('serve_index'))
+
 
 @app.route('/users')
 def list_users():
@@ -87,6 +94,19 @@ def list_users():
         } for u in users
     ])
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('serve_index'))
+
+@app.route("/api/whoami")
+def whoami():
+    if "username" in session:
+        return jsonify({"username": session["username"]})
+    else:
+        return jsonify({"username": None})
+    
+    
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
