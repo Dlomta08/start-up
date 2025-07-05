@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, jsonify, redirect, send_from_directory, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
+from werkzeug.utils import secure_filename
+
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key_123"
@@ -13,6 +17,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:HxUppyuPWngdmEvar
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
 
 # User model
 class User(db.Model):
@@ -21,6 +28,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.Text, nullable=False)
     role = db.Column(db.String(20), default='member')
+    avatar_filename = db.Column(db.String(255), nullable=True)
 
 with app.app_context():
     db.create_all()
@@ -108,7 +116,90 @@ def whoami():
     else:
         return jsonify({"username": None})
     
-    
+@app.route("/profile")
+def profile():
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(username=session["username"]).first()
+    if not user:
+        return "User not found.", 404
+
+    return render_template("profile.html", user=user)
+
+
+@app.route("/edit_profile", methods=["GET", "POST"])
+def edit_profile():
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(username=session["username"]).first()
+    if not user:
+        return "User not found.", 404
+
+    if request.method == "POST":
+        new_email = request.form.get("email")
+        new_username = request.form.get("username")
+
+        # Optional: Validate inputs here
+
+        if new_email:
+            user.email = new_email
+
+        if new_username:
+            # Check if username is taken
+            existing = User.query.filter(User.username == new_username).first()
+            if existing and existing.id != user.id:
+                return "Username already taken.", 400
+            user.username = new_username
+            # Update the session username so it shows up right
+            session["username"] = new_username
+
+        db.session.commit()
+        return redirect(url_for("profile"))
+
+    return render_template("edit_profile.html", user=user)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+UPLOAD_FOLDER = os.path.join("static", "uploads")
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+@app.route("/upload_avatar", methods=["GET", "POST"])
+def upload_avatar():
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(username=session["username"]).first()
+    if not user:
+        return "User not found.", 404
+
+    if request.method == "POST":
+        if "avatar" not in request.files:
+            return "No file part.", 400
+
+        file = request.files["avatar"]
+
+        if file.filename == "":
+            return "No selected file.", 400
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(filepath)
+
+            user.avatar_filename = filename
+            db.session.commit()
+            return redirect(url_for("profile"))
+        else:
+            return "Invalid file type.", 400
+
+    return render_template("upload_avatar.html")
+
+
+
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))

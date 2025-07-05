@@ -4,9 +4,9 @@ fetch('/api/whoami')
     const el = document.getElementById('account-info');
     if (data.username) {
       el.innerHTML = `
-        <strong>${data.username}</strong>
-        <a href="/logout">Log out</a>
-      `;
+     <a href="/profile"><strong>${data.username}</strong></a>
+      <a href="/logout">Log out</a>
+    `;
     } else {
       el.innerHTML = `
         <a href="/login">Log in</a> |

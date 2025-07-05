@@ -1,1 +1,0 @@
-print("SAT unda vimecadino")
