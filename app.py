@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-
+app.secret_key = "super_secret_key_123"
 
 
 # PostgreSQL connection string
