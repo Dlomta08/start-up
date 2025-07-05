@@ -61,25 +61,27 @@ def register():
 
     return render_template("register.html")
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-    if not username or not password:
-        return "All fields are required.", 400
+        if not username or not password:
+            return "All fields are required.", 400
 
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        return "User not found.", 404
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return "User not found.", 404
 
-    if not check_password_hash(user.password_hash, password):
-        return "Incorrect password.", 400
+        if not check_password_hash(user.password_hash, password):
+            return "Incorrect password.", 400
 
-    # ✅ This is where you set the session:
-    session['username'] = user.username
+        session['username'] = user.username
+        return redirect(url_for('serve_index'))
 
-    return redirect(url_for('serve_index'))
+    # ✅ Serve the login form if GET
+    return render_template("login.html")
 
 
 @app.route('/users')
