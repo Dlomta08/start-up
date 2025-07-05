@@ -198,6 +198,30 @@ def upload_avatar():
 
     return render_template("upload_avatar.html")
 
+@app.route("/change_password", methods=["GET", "POST"])
+def change_password():
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(username=session["username"]).first()
+    if not user:
+        return "User not found.", 404
+
+    if request.method == "POST":
+        current_password = request.form.get("current_password")
+        new_password = request.form.get("new_password")
+
+        if not current_password or not new_password:
+            return "All fields are required.", 400
+
+        if not check_password_hash(user.password_hash, current_password):
+            return "Incorrect current password.", 400
+
+        user.password_hash = generate_password_hash(new_password, method="pbkdf2:sha256")
+        db.session.commit()
+        return redirect(url_for("profile"))
+
+    return render_template("change_password.html")
 
 
 if __name__ == "__main__":
