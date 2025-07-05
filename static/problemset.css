@@ -44,3 +44,20 @@ body {
 .custom-file-label:hover {
   background-color: #0056b3;
 }
+#account-info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+#account-info a {
+  margin-left: 10px;
+  text-decoration: none;
+  color: #007bff;
+}
+
+#account-info a:hover {
+  text-decoration: underline;
+}
